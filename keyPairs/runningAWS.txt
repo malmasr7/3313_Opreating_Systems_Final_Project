@@ -1,0 +1,4 @@
+ssh -i group11b3010.pem group11b@ec2-34-218-37-8.us-west-2.compute.amazonaws.com
+
+
+this command needs to be run in git bash in this folder 
