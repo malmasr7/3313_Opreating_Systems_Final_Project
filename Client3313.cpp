@@ -1,5 +1,5 @@
 /*
-	title:		SE3313 Lab 4 Solution
+	title:		SE3313 Lab 4 Solution Edited
 	author: 	Daniel Bailey (dbaile7@uwo.ca)
 	date:		November 15, 2018
 	brief:
@@ -21,19 +21,18 @@ using namespace Sync;
 class ClientThread : public Thread
 {
 private:
+
 	// Reference to our connected socket
 	Socket& socket;
-
 	// Reference to boolean flag for terminating the thread
 	bool& terminate;
-
 	// Are we connected?
 	bool connected = false;
-
 	// Data to send to server
 	ByteArray data;
 	std::string data_str;
 	int expectedLength = 0;
+
 public:
 	ClientThread(Socket& socket, bool& terminate)
 	: socket(socket), terminate(terminate)
@@ -81,7 +80,7 @@ public:
 		while (!terminate)
 		{
 			// We are connected, perform our operations
-			std::cout << "Please input your data (done to exit): ";
+			std::cout << "Please input your data (done to exit): ";   //=============== - Potienital Change. Input formating
 			std::cout.flush();
 
 			// Get the data
@@ -96,7 +95,10 @@ public:
 				std::cout << "Cannot send no data!" << std::endl;
 				continue;
 			}
-			else if (data_str == "done")
+			//===========================
+			//--Changed server shutdown from "done"
+			else if (data_str == "doneCloseServer")			//	================================= - Maybe change so it only disconnects this client
+			//===========================
 			{
 				std::cout << "Closing the client..." << std::endl;
 				terminate = true;
@@ -113,7 +115,7 @@ public:
 			else
 			{
 				data_str = data.ToString();
-				std::cout << "Server Response: " << data_str << std::endl;
+				std::cout << "Server Response: " << data_str << std::endl;  //================================ - Potiential Change. "Server Response: " formating
 			}
 		}
 
@@ -124,7 +126,16 @@ public:
 int main(void)
 {
 	// Welcome the user and try to initialize the socket
-	std::cout << "SE3313 Lab 4 Client" << std::endl;
+	//=============================================
+	std::cout << "SE3313 Chat Room Client" << std::endl;
+	//=============================================
+
+
+	//=================================
+	//Alone or not message...? Add message if new client joins chat
+
+
+	//=================================
 
 	// Create our socket
 	//Socket socket("127.0.0.1", 3000);
