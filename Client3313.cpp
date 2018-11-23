@@ -126,13 +126,13 @@ public:
 int main(void)
 {
 	// Welcome the user and try to initialize the socket
-	//=============================================
+	//=============================================###########
 	std::cout << "SE3313 Chat Room Client" << std::endl;
 	//=============================================
 
 
 	//=================================
-	//Alone or not message...? Add message if new client joins chat
+	//Alone or not message/logic...? Add message if new client joins chat
 
 
 	//=================================

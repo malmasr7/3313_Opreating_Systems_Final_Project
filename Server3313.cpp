@@ -61,10 +61,11 @@ public:
                 data = ByteArray(data_str);
                 */
 
-                //========================================
+                //========================================#######
                 // Send it back (to own pair reference)
                 //socket'sPair.Write(data);
-                //##########
+                int placement = locateThreadPair(socket);    //find location of this referenced socket in the vector
+                socketThreadPairs[placement].getPartner(socket).Write(data);       //in pair, get socket's partner, and write the data message to this partner
                 //========================================
             }
             catch (...)
@@ -94,20 +95,20 @@ class Pair{
         //destructor
         ~Pair() { }
 
-        //--Don't know if necessary==========
-            //{
-        //get right
-        //--returns address of thread
-         SocketThread getRight(){
-            return *right;
-        }
-
-        //get left
-        //--returns address of thread
-        SocketThread getLeft(){
-            return *left;
-        }
-            //}==============================
+        //--Don't know if necessary {========
+        //                                  =
+        //get right                         =
+        //--returns address of thread       =
+         SocketThread getRight(){         //=
+            return *right;                //=
+        }                                 //=
+                                          //=
+        //get left                          =
+        //--returns address of thread       =
+        SocketThread getLeft(){           //=
+            return *left;                 //=
+        }                                 //=
+        //}==================================
 
         //get other
         //--return thread pointed at (or returns address of thread pointed at?)
@@ -139,7 +140,7 @@ class Pair{
         //--vector, call empty. If empty returns false, then always
         //--adds to the right side. else add to the left
         void Add(SocketThread input){      //pass Thread to this function to use
-            if(isEmpty()==true){    right = input;     }        //not empty, not full, only open on right
+            if(isEmpty()==false){    right = input;     }        //not empty, not full, only open on right   ///only want to pass location, not copy it ########### Needs change
             else{   left = input;  }                            //value in left = address of the input
         }   
         //^not sure if getting the correct value
@@ -153,7 +154,7 @@ class ServerThread : public Thread
 private:
     SocketServer& server;
 
-    //====================================
+    //====================================#######
     //old vector
     //std::vector<SocketThread*> socketThreads;
     //new vector
@@ -165,7 +166,7 @@ private:
 public:
 
     //Locate function to find which vector location has thread
-    //========================================================
+    //========================================================###########
     //--after can just call get pair (check full, and empty first)
     //--locate's thread's pair in the vector if given a thread
     int locateThreadPair(SocketThread input){
@@ -182,7 +183,12 @@ public:
 
     ServerThread(SocketServer& server)
     : server(server)
-    {}
+    {
+    //================##########
+    //--create first pair so not empty vector on serverThread initiation
+    socketThreadPairs.push_back(new Pair());
+    //================
+    }
 
     ~ServerThread()
     {
@@ -191,7 +197,7 @@ public:
         {
             try
             {
-                //==============================
+                //==============================#######
                 // Close the sockets of the pair
                 if (pair.isFull()==true){   //close both, full fair
                     //close left
@@ -232,7 +238,7 @@ public:
                 // Pass a reference to this pointer into a new socket thread
                 Socket& socketReference = *newConnection;
                 
-                //===============================================
+                //===============================================###########
                 //-->First Pair unique case
                 //New push back
                 //check if last pair is full socketThreadPairs[socketThreadPairs.size()].isFull
@@ -242,12 +248,16 @@ public:
                 //add to avaliable pair in vector. at vector[vector.size()] (add to last pair)
                 
                 //Original
-                socketThreads.push_back(new SocketThread(socketReference, terminate));
+                //socketThreads.push_back(new SocketThread(socketReference, terminate));
 
-
-
-
-
+                //if last full is not full
+                if (  socketThreadPairs[socketThreadPairs.size()].isFull() == false  ){
+                    socketThreadPairs[socketThreadPairs.size()].Add(new SocketThread(socketReference, terminate));  //add new socketThread to that pair
+                }
+                else{   //logic for new pair, pair is full, need a new pair to add to
+                    socketThreadPairs.push_back( new Pair() );                                                              //add new pair to end
+                    socketThreadPairs[socketThreadPairs.size()].Add(new SocketThread(socketReference, terminate));          //new last pair is new pair, give it a new socketThread
+                }
                 //===============================================
             }
             catch (TerminationException terminationException)
@@ -267,7 +277,7 @@ int main(void)
 {
     // Welcome the user
     //std::cout << "SE3313 Lab 4 Server" << std::endl;
-    //================
+    //================#######
     std::cout << "SE3313 Chat Server" <<std::endl;
     //================
     std::cout << "Press enter to terminate the server...";
