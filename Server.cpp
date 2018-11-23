@@ -19,23 +19,6 @@
 
 using namespace Sync;
 
-//put it in scope
-//Locate function to find which vector location has thread
-//========================================================###########
-    //--after can just call get pair (check full, and empty first)
-    //--locate's thread's pair in the vector if given a thread
-int locateThreadPair(SocketThread &input){
-    int location = -1;  //can use for error check. if -1 then could not find
-    for(int index = 0; index < socketThreadPairs.size(); index++){
-        if( ( socketThreadPairs[index].getLeft() == input) || ( socketThreadPairs[index].getRight() == input) ){    //comapred by addresses left or right
-            location = index; 
-            break;
-        }
-    }
-    return location;
-}
-//========================================================
-
 
 // This thread handles each client connection
 class SocketThread : public Thread
@@ -50,6 +33,24 @@ private:
     bool& terminate;
 
 public:
+
+//put it in scope
+//Locate function to find which vector location has thread
+//========================================================###########
+    //--after can just call get pair (check full, and empty first)
+    //--locate's thread's pair in the vector if given a thread
+    int locateThreadPair(SocketThread &input){
+        int location = -1;  //can use for error check. if -1 then could not find
+        for(int index = 0; index < ServerThread::socketThreadPairs.size(); index++){
+            if( ( ServerThread::socketThreadPairs[index].getLeft() == input) || ( ServerThread::socketThreadPairs[index].getRight() == input) ){    //comapred by addresses left or right
+                location = index; 
+                break;
+            }
+        }
+        return location;
+    }
+//========================================================
+
     SocketThread(Socket& socket, bool& terminate)
     : socket(socket), terminate(terminate)
     {}
