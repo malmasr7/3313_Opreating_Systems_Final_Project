@@ -19,83 +19,7 @@
 
 using namespace Sync;
 
-
-// This thread handles each client connection
-class SocketThread : public Thread
-{
-private:
-
-    // Reference to our connected socket
-    Socket& socket;
-    // The data we are receiving
-    ByteArray data;
-    // Are we terminating?
-    bool& terminate;
-
-public:
-
-//put it in scope
-//Locate function to find which vector location has thread
-//========================================================###########
-    //--after can just call get pair (check full, and empty first)
-    //--locate's thread's pair in the vector if given a thread
-    int locateThreadPair(SocketThread &input){
-        int location = -1;  //can use for error check. if -1 then could not find
-        for(int index = 0; index < ServerThread::socketThreadPairs.size(); index++){
-            if( ( ServerThread::socketThreadPairs[index].getLeft() == input) || ( ServerThread::socketThreadPairs[index].getRight() == input) ){    //comapred by addresses left or right
-                location = index; 
-                break;
-            }
-        }
-        return location;
-    }
-//========================================================
-
-    SocketThread(Socket& socket, bool& terminate)
-    : socket(socket), terminate(terminate)
-    {}
-
-    ~SocketThread()
-    {}
-
-    Socket& GetSocket()
-    {
-        return socket;
-    }
-
-    virtual long ThreadMain()
-    {
-        // If terminate is ever flagged, we need to gracefully exit
-        while(!terminate)
-        {
-            try
-            {
-                // Wait for data
-                socket.Read(data);
-
-                /*
-                // Perform operations on the data
-                std::string data_str = data.ToString();
-                std::reverse(data_str.begin(), data_str.end());
-                data = ByteArray(data_str);
-                */
-
-                //========================================#######
-                // Send it back (to own pair reference)
-                //socket'sPair.Write(data);
-                int placement = locateThreadPair(socket);    //find location of this referenced socket in the vector
-                socketThreadPairs[placement].getPartner(socket).Write(data);       //in pair, get socket's partner, and write the data message to this partner
-                //========================================
-            }
-            catch (...)
-            {
-                // We catch the exception, but there is nothing for us to do with it here. Close the thread.
-            }
-        }
-
-        return 0;
-    }
-};
+int locateThreadPair(SocketThread &input);
 
 //Struct for pairs
 //===========================
@@ -276,6 +200,24 @@ public:
         }
     }
 };
+
+
+//put it in scope
+//Locate function to find which vector location has thread
+//========================================================###########
+    //--after can just call get pair (check full, and empty first)
+    //--locate's thread's pair in the vector if given a thread
+int locateThreadPair(SocketThread &input){
+    int location = -1;  //can use for error check. if -1 then could not find
+    for(int index = 0; index < socketThreadPairs.size(); index++){
+        if( ( socketThreadPairs[index].getLeft() == input) || ( socketThreadPairs[index].getRight() == input) ){    //comapred by addresses left or right
+            location = index; 
+            break;
+        }
+    }
+    return location;
+}
+//========================================================
 
 int main(void)
 {
