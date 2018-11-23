@@ -99,13 +99,13 @@ class Pair{
         //                                  =
         //get right                         =
         //--returns address of thread       =
-         SocketThread getRight(){         //=
+        &SocketThread getRight(){         //=
             return *right;                //=
         }                                 //=
                                           //=
         //get left                          =
         //--returns address of thread       =
-        SocketThread getLeft(){           //=
+        &SocketThread getLeft(){           //=
             return *left;                 //=
         }                                 //=
         //}==================================
@@ -148,6 +148,25 @@ class Pair{
 }
 //============================
 
+//Locate function to find which vector location has thread
+//========================================================###########
+    //--after can just call get pair (check full, and empty first)
+    //--locate's thread's pair in the vector if given a thread
+int locateThreadPair(SocketThread &input){
+    int location = -1;  //can use for error check. if -1 then could not find
+    for(int index = 0; index < socketThreadPairs.size(); index++){
+        if( ( socketThreadPairs[index].getLeft() == input) || ( socketThreadPairs[index].getRight() == input) ){    //comapred by addresses left or right
+            location = index; 
+            break;
+        }
+    }
+    return location;
+}
+//========================================================
+
+
+
+
 // This thread handles the server operations
 class ServerThread : public Thread
 {
@@ -164,22 +183,6 @@ private:
     bool terminate = false;
 
 public:
-
-    //Locate function to find which vector location has thread
-    //========================================================###########
-    //--after can just call get pair (check full, and empty first)
-    //--locate's thread's pair in the vector if given a thread
-    int locateThreadPair(SocketThread input){
-        int location = -1;  //can use for error check. if -1 then could not find
-        for(int index = 0; index < socketThreadPairs.size(); index++){
-            if( (&(socketThreadPairs[index].getLeft()) == &input) || (&(socketThreadPairs[index].getRight()) == &input) ){    //comapred by addresses left or right
-                location = index; 
-                break;
-            }
-        }
-        return location;
-    }
-    //========================================================
 
     ServerThread(SocketServer& server)
     : server(server)
@@ -252,7 +255,7 @@ public:
 
                 //if last full is not full
                 if (  socketThreadPairs[socketThreadPairs.size()].isFull() == false  ){
-                    socketThreadPairs[socketThreadPairs.size()].Add(new SocketThread(socketReference, terminate));  //add new socketThread to that pair
+                    socketThreadPairs[socketThreadPairs.size()].Add(new SocketThread(socketReference, terminate));          //add new socketThread to that pair
                 }
                 else{   //logic for new pair, pair is full, need a new pair to add to
                     socketThreadPairs.push_back( new Pair() );                                                              //add new pair to end
