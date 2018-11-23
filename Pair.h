@@ -44,8 +44,7 @@ class Pair{
         //--vector, call empty. If empty returns false, then always
         //--adds to the right side. else add to the left
         void Add(SocketThread &input);
-    }
-}
+};
 //============================
 
 #endif

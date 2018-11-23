@@ -19,7 +19,7 @@
 
 #include "socketThread.h"
 #include "serverThread.h"
-#include "Pair.h"
+//#include "Pair.h"
 
 using namespace Sync;
 
