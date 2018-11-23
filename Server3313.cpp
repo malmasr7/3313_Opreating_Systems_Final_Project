@@ -113,12 +113,12 @@ class Pair{
         //get other
         //--return thread pointed at (or returns address of thread pointed at?)
         //needed here?
-        SocketThread getPartner(SocketThread input){
+        SocketThread getPartner(SocketThread &input){
             if (this.isFull()==true){   //only runs if has a partner
-                if(&input == &(*left)){
-                    return *right;  //if the address of input and address of object pointed at by left are equal, return right object
+                if(input == left){
+                    return * right;  //if the address of input and address of object pointed at by left are equal, return right object
                 }
-                if(&input == &(*right)){
+                if(input == right){
                     return * left;    
             }       //needs to be formatted better. What if it doesn't match?
         }
@@ -139,7 +139,7 @@ class Pair{
         //--implement logic to ensure is full is not true on enter from vector
         //--vector, call empty. If empty returns false, then always
         //--adds to the right side. else add to the left
-        void Add(SocketThread input){      //pass Thread to this function to use
+        void Add(SocketThread &input){      //pass Thread to this function to use
             if(isEmpty()==false){    right = input;     }        //not empty, not full, only open on right   ///only want to pass location, not copy it ########### Needs change
             else{   left = input;  }                            //value in left = address of the input
         }   
