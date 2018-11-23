@@ -1,18 +1,34 @@
-class SocketThread : public Thread
+#ifndef SERVERTHREAD_H
+#define SERVERTHREAD_H
+
+#include "socketserver.h"
+#include "thread.h"
+#include "Pair.h"
+#include <vector>
+
+
+// This thread handles the server operations
+class ServerThread : public Thread
 {
 private:
-
-    // Reference to our connected socket
-    Socket& socket;
-    // The data we are receiving
-    ByteArray data;
-    // Are we terminating?
-    bool& terminate;
+    SocketServer& server;
+    vector<Pair> socketThreadPairs;
+    bool terminate = false;
 
 public:
 
-    SocketThread(Socket& socket, bool& terminate): socket(socket), terminate(terminate){}
-    ~SocketThread(){}
-    Socket& GetSocket();
+    ServerThread(SocketServer& server)
+    : server(server)
+    {
+    //================##########
+    //--create first pair so not empty vector on serverThread initiation
+        socketThreadPairs.push_back(new Pair());
+    //================
+    }
+
+    ~ServerThread();
+
     virtual long ThreadMain();
 };
+
+#endif
