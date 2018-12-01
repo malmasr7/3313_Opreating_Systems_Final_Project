@@ -38,7 +38,7 @@ unix version-
 int main(void){
 		std::cout << "SE3313 Lab 4 Client" << std::endl;
 		
-		Socket socket("52.24.128.64", 3005);
+		Socket socket("52.24.128.64", 3010);
 		//Socket socket("127.0.0.1", 3000);
 	
 		ByteArray data;

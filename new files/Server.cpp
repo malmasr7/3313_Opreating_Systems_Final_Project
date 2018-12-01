@@ -310,7 +310,7 @@ int main(void)
 	
 	// Create our server
     try{
-    SocketServer server(3005); 
+    SocketServer server(3010); 
     ServerThread serverThread(server);
     // This will wait for input to shutdown the server
     FlexWait cinWaiter(1, stdin);
